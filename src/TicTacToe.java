@@ -108,7 +108,10 @@ public class TicTacToe {
 	public static void makePlacement(char board[], int position, char character) {
 		String stringChar = "";
 		stringChar += character;
-		board[convertToIndex(position, board.length)] = capitalize(stringChar);
+		if(position < 11)
+			board[position] = capitalize(stringChar);
+		else
+			board[convertToIndex(position, board.length)] = capitalize(stringChar);
 	}
 
 	/**
@@ -134,7 +137,10 @@ public class TicTacToe {
 	 * @return whether the characters are all Xs or all Os
 	 */
 	public static boolean threeInRow(char a, char b, char c) {
-		return false;
+		if(a == b && b == c && a == c)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -145,24 +151,106 @@ public class TicTacToe {
 	 * @param board the tic-tac-toe game board
 	 * @return whether the game is over
 	 */
-	public static boolean gameOverWinner(char board[]) {
+	public static boolean gameOverWinner(char board[], char testChar) {
+		return inARow(board, (int) Math.sqrt(board.length), testChar);
+	}
+	
+	/**
+	 * Searches the board for any lines of a given character of any given length
+	 * looks for all horizantal vertical and the two possible winning diagonal lines
+	 * 
+	 * @param board the tic-tac-toe game board
+	 * @param expectedLength the lenght of the line searched for
+	 * @param testChar the character that the program is looking for in the lines
+	 * @return whether a satisfactory line exists
+	 */
+	public static boolean inARow(char[] board, int expectedLength, char testChar) {
+		int count = 0;
+		int sqrt =  (int) Math.sqrt(board.length);
+		// Tests Horiz lines
+		for(int i = 0; i < board.length; i += sqrt) {
+			for (int j = i; j < sqrt * ((j/sqrt) +1 ); j++) {
+				if(count == expectedLength)
+					return true;
+				else if (board[j] == testChar && count != expectedLength)
+					count++;
+				else if (expectedLength == sqrt && board[j] != testChar) {
+					count = 0;
+					break;
+				}
+			}
+		}
+		
+		//Test Vert. Lines
+		for (int i = 0; i < sqrt; i++) {
+			for (int j = i; j < (board.length - sqrt + i); j += sqrt) {
+				if(count == expectedLength)
+					return true;
+				else if (board[j] == testChar && count != expectedLength)
+					count++;
+				else if (expectedLength == sqrt && board[j] != testChar) {
+					count = 0;
+					break;
+				}
+			}
+		}
+		
+		//Test diagonally down and to the right.
+		for (int i = 0; i < board.length; i += (sqrt +1)) {
+			if(count == expectedLength)
+				return true;
+			else if (board[i] == testChar && count != expectedLength)
+				count++;
+			else if (expectedLength == sqrt && board[i] != testChar) {
+				count = 0;
+				break;
+			}
+		}
+		
+		//Test diagonally down and to the left.
+		for (int i = sqrt - 1; i < board.length - sqrt; i += (sqrt - 1)) {
+			if(count == expectedLength)
+				return true;
+			else if (board[i] == testChar && count != expectedLength)
+				count++;
+			else if (expectedLength == sqrt && board[i] != testChar) {
+				count = 0;
+				break;
+			}
+		}
 		return false;
 	}
-
+	
 	public static void main(String[] args) {
 		System.out.println("Welcome to Tic-Tac-Toe!");
 		Scanner input = new Scanner(System.in);
-		int boardSize = 0;
+		int numMoves = 0; // increments when player or game A.I. makes a move
+		int boardSize = 0, play = 0;
+		
 		do {
 			System.out.print("What size board would you like to play?: ");
 			boardSize =  input.nextInt();
+			input.nextLine();
 			if((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0))
 				System.out.println("That is not a perfect square. For default enter 9.");
 		}while ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0));
+		
 		char board[] = new char[boardSize];
-		int numMoves = 0; // increments when player or game A.I. makes a move
 		initializeBoard(board);
 		printBoard(board);
+		System.out.print("do you want to play x or o?: ");
+		String playerChar = input.nextLine();
+		capitalize(playerChar);
+		do {
+			System.out.println("Where will you play?: ");
+			play = input.nextInt();
+			input.nextLine();
+			makePlacement(board, play, playerChar.charAt(0));
+			numMoves++;
+			printBoard(board);
+			makePlacement(board, randomPosition(boardSize), 'o');
+			numMoves++;
+		}while (numMoves != boardSize || !gameOverWinner(board, 'X') || !gameOverWinner(board, 'O'));
 	}
 
 }
