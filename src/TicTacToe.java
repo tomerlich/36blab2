@@ -36,10 +36,11 @@ public class TicTacToe {
 	/**
 	 * Prints the board to the console in the form of a grid, including column and
 	 * row numbers. Also prints Tic-Tac-Toe Board above the board. For example:
-	 * Tic-Tac-Toe: 1 2 3
-	 * 			  1 O - -
-	 * 			  2 - X -
-	 * 			  3 - - -
+	 * Tic-Tac-Toe: 
+	 *  1 2 3
+	 *1 O - -
+	 *2 - X -
+	 *3 - - -
 	 * @param board the array representing the tic-tac-toe board
 	 */
 	public static void printBoard(char board[]) {
@@ -260,16 +261,20 @@ public class TicTacToe {
 				makePlacement(board, play, playerChar.charAt(0));
 				numMoves++;
 				printBoard(board);
-				if (gameOverWinner(board))
+				if (gameOverWinner(board)) {
+					System.out.println("Game over you win!");
 					break;
+				}
 				do {
 					compPlay = randomPosition(boardSize);
 				}while (alreadyTaken(board, compPlay) == false);
 				board[compPlay] = compChar;
 				printBoard(board);
 				numMoves++;
-				if (gameOverWinner(board))
+				if (gameOverWinner(board)) {
+					System.out.println("Game over computer wins!");
 					break;
+				}
 			}while (numMoves < boardSize - 1);
 			System.out.print("would you like to play again?(y/n)");
 			String userIn = input.nextLine();
