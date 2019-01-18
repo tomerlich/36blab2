@@ -91,10 +91,10 @@ public class TicTacToe {
 	 * @return whether that position has already been taken
 	 */
 	public static boolean alreadyTaken(char board[], int position) {
-		if (board[convertToIndex(position, board.length)] != '-')
-			return true;
-		else
+		if (board[position] != '-')
 			return false;
+		else
+			return true;
 	}
 
 	/**
@@ -151,8 +151,13 @@ public class TicTacToe {
 	 * @param board the tic-tac-toe game board
 	 * @return whether the game is over
 	 */
-	public static boolean gameOverWinner(char board[], char testChar) {
-		return inARow(board, (int) Math.sqrt(board.length), testChar);
+	public static boolean gameOverWinner(char board[]) {
+		if(inARow(board, (int) Math.sqrt(board.length), 'X'))
+			return true;
+		else if(inARow(board, (int) Math.sqrt(board.length), 'O'))
+			return true;
+		else
+			return false;
 	}
 	
 	/**
@@ -168,6 +173,7 @@ public class TicTacToe {
 		int count = 0;
 		int sqrt =  (int) Math.sqrt(board.length);
 		// Tests Horiz lines
+		// This appears to work
 		for(int i = 0; i < board.length; i += sqrt) {
 			for (int j = i; j < sqrt * ((j/sqrt) +1 ); j++) {
 				if(count == expectedLength)
@@ -183,20 +189,19 @@ public class TicTacToe {
 		
 		//Test Vert. Lines
 		for (int i = 0; i < sqrt; i++) {
-			for (int j = i; j < (board.length - sqrt + i); j += sqrt) {
+			for (int j = i; j <= ((board.length - sqrt) + i); j += sqrt) {
 				if(count == expectedLength)
 					return true;
 				else if (board[j] == testChar && count != expectedLength)
 					count++;
 				else if (expectedLength == sqrt && board[j] != testChar) {
 					count = 0;
-					break;
 				}
 			}
 		}
 		
 		//Test diagonally down and to the right.
-		for (int i = 0; i < board.length; i += (sqrt +1)) {
+		for (int i = 0; i < board.length; i += (sqrt + 1)) {
 			if(count == expectedLength)
 				return true;
 			else if (board[i] == testChar && count != expectedLength)
@@ -215,7 +220,6 @@ public class TicTacToe {
 				count++;
 			else if (expectedLength == sqrt && board[i] != testChar) {
 				count = 0;
-				break;
 			}
 		}
 		return false;
@@ -225,7 +229,9 @@ public class TicTacToe {
 		System.out.println("Welcome to Tic-Tac-Toe!");
 		Scanner input = new Scanner(System.in);
 		int numMoves = 0; // increments when player or game A.I. makes a move
-		int boardSize = 0, play = 0;
+		int boardSize = 0, play = 0, compPlay = 0;
+		boolean donePlaying = false;
+		char compChar;
 		
 		do {
 			System.out.print("What size board would you like to play?: ");
@@ -241,16 +247,43 @@ public class TicTacToe {
 		System.out.print("do you want to play x or o?: ");
 		String playerChar = input.nextLine();
 		capitalize(playerChar);
+		if (playerChar.equalsIgnoreCase("x"))
+			compChar = 'O';
+		else
+			compChar = 'X';
+		
 		do {
-			System.out.println("Where will you play?: ");
-			play = input.nextInt();
-			input.nextLine();
-			makePlacement(board, play, playerChar.charAt(0));
-			numMoves++;
-			printBoard(board);
-			makePlacement(board, randomPosition(boardSize), 'o');
-			numMoves++;
-		}while (numMoves != boardSize || !gameOverWinner(board, 'X') || !gameOverWinner(board, 'O'));
+			do {
+				System.out.println("Where will you play?: ");
+				play = input.nextInt();
+				input.nextLine();
+				makePlacement(board, play, playerChar.charAt(0));
+				numMoves++;
+				printBoard(board);
+				if (gameOverWinner(board))
+					break;
+				do {
+					compPlay = randomPosition(boardSize);
+				}while (alreadyTaken(board, compPlay) == false);
+				board[compPlay] = compChar;
+				printBoard(board);
+				numMoves++;
+				if (gameOverWinner(board))
+					break;
+			}while (numMoves < boardSize - 1);
+			System.out.print("would you like to play again?(y/n)");
+			String userIn = input.nextLine();
+			if (userIn.equalsIgnoreCase("y")) {
+				numMoves = 0;
+				initializeBoard(board);
+				donePlaying = false;
+			}
+			else {
+				System.out.print("Ok goodbye!");
+				donePlaying = true;
+			}
+		}while (donePlaying == false);
+		input.close();
 	}
 
 }
