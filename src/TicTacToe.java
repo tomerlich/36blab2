@@ -374,9 +374,9 @@ public class TicTacToe {
 					do {
 						compPlay = randomPosition(boardSize);
 					} while (!alreadyTaken(board, compPlay));
-					//board[compPlay] = compChar;
+					board[compPlay] = compChar;
 					printBoard(board);
-					//numMoves++;
+					numMoves++;
 					if (gameOverWinner(board)) {
 						System.out.println("Game over computer wins!");
 						break;
