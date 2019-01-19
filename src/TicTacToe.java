@@ -283,6 +283,7 @@ public class TicTacToe {
 		System.out.println("Welcome to Tic-Tac-Toe!");
 
 		Scanner input = new Scanner(System.in);
+		Scanner boardLoader = new Scanner(new File("gameSaves.txt"));
 		int numMoves = 0; // increments when player or game A.I. makes a move
 		int boardSize = 0, play = 0, compPlay = 0;
 		boolean donePlaying = false, playerTurn = false, inputValid = false;
@@ -294,8 +295,7 @@ public class TicTacToe {
 			// Check if the user wants to continue a game other wise start a brand new game
 			System.out.print("Would you like to continue a past game?(Y/N)");
 			String continueGame = input.nextLine();
-			if (continueGame.equalsIgnoreCase("y")) {
-				Scanner boardLoader = new Scanner(new File("gameSaves.txt"));
+			if (continueGame.equalsIgnoreCase("y") && boardLoader.hasNext()) {
 				playerChar = boardLoader.nextLine();
 				if (playerChar.equalsIgnoreCase("x"))
 					compChar = 'O';
@@ -314,6 +314,9 @@ public class TicTacToe {
 				loadGame(board);
 				printBoard(board);
 			} else {
+				if (!boardLoader.hasNext() && continueGame.equalsIgnoreCase("y")){
+					System.out.println("You dont have any games saved! Lets start a new one!");
+				}
 				// Takes user input and makes sure it is a valid board size.
 				// Size of boards is limited to 9x9
 				do {
@@ -393,8 +396,9 @@ public class TicTacToe {
 					}
 					playerTurn = true;
 				}
-			} while (numMoves < boardSize - 1);
-
+			} while (numMoves < boardSize);
+			if(numMoves == boardSize && !gameOverWinner(board))
+				System.out.println("Game over its a tie!");
 			System.out.print("Would you like to play another game?(Y/N) ");
 			String userIn = input.nextLine();
 
