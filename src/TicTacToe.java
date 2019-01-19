@@ -175,12 +175,11 @@ public class TicTacToe {
 			for (int j = i; j < sqrt * ((j / sqrt) + 1); j++) {
 				if (count == expectedLength)
 					return true;
-				else if (board[j] == testChar && count != expectedLength){
+				else if (board[j] == testChar && count != expectedLength) {
 					count++;
 					if (count == expectedLength)
 						return true;
-				}
-				else if (expectedLength == sqrt && board[j] != testChar) {
+				} else if (expectedLength == sqrt && board[j] != testChar) {
 					count = 0;
 					break;
 				}
@@ -192,12 +191,11 @@ public class TicTacToe {
 			for (int j = i; j <= ((board.length - sqrt) + i); j += sqrt) {
 				if (count == expectedLength)
 					return true;
-				else if (board[j] == testChar && count != expectedLength){
+				else if (board[j] == testChar && count != expectedLength) {
 					count++;
 					if (count == expectedLength)
 						return true;
-				}
-				else if (expectedLength == sqrt && board[j] != testChar) {
+				} else if (expectedLength == sqrt && board[j] != testChar) {
 					count = 0;
 					break;
 				}
@@ -208,12 +206,11 @@ public class TicTacToe {
 		for (int i = 0; i < board.length; i += (sqrt + 1)) {
 			if (count == expectedLength)
 				return true;
-			else if (board[i] == testChar && count != expectedLength){
+			else if (board[i] == testChar && count != expectedLength) {
 				count++;
 				if (count == expectedLength)
 					return true;
-			}
-			else if (expectedLength == sqrt && board[i] != testChar) {
+			} else if (expectedLength == sqrt && board[i] != testChar) {
 				count = 0;
 				break;
 			}
@@ -227,8 +224,7 @@ public class TicTacToe {
 				count++;
 				if (count == expectedLength)
 					return true;
-			}
-			else if (expectedLength == sqrt && board[i] != testChar) {
+			} else if (expectedLength == sqrt && board[i] != testChar) {
 				count = 0;
 				break;
 			}
@@ -236,7 +232,7 @@ public class TicTacToe {
 		return false;
 	}
 
-	/** 
+	/**
 	 * Loads the board state from a file
 	 * 
 	 * @param board the tic-tac-toe game board
@@ -294,67 +290,67 @@ public class TicTacToe {
 		char[] board;
 		String playerChar, lastPlayed;
 
-		// Check if the user wants to continue a game other wise start a brand new game
-		System.out.print("Would you like to continue a past game?(Y/N)");
-		String continueGame = input.nextLine();
-		if (continueGame.equalsIgnoreCase("y")) {
-			Scanner boardLoader = new Scanner(new File("gameSaves.txt"));
-			playerChar = boardLoader.nextLine();
-			if (playerChar.equalsIgnoreCase("x"))
-				compChar = 'O';
-			else
-				compChar = 'X';
-			
-			lastPlayed = boardLoader.nextLine();
-			if (playerChar.equalsIgnoreCase(lastPlayed))
-				playerTurn = true;
-			else
-				playerTurn = true;
-			
-			boardSize = count(boardLoader);
-			board = new char[boardSize];
-			boardLoader.close();
-			loadGame(board);
-			printBoard(board);
-		} else {
-			// Takes user input and makes sure it is a valid board size.
-			// Size of boards is limited to 9x9
-			do {
-				System.out.print("What size board would you like to play?\nAs an example enter 9 for a 3x3 grid: ");
-				boardSize = input.nextInt();
-				input.nextLine();
-				if ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0))
-					System.out.println("That is not a perfect square. For default board enter 9.");
-			} while ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0) && Math.sqrt(boardSize) < 9);
-
-			board = new char[boardSize];
-			initializeBoard(board);
-			printBoard(board);
-
-			do {
-				System.out.print("Do you want to play X or O?\nX always goes first!: ");
-				playerChar = input.nextLine();
-				capitalize(playerChar);
-				if (playerChar.equalsIgnoreCase("x")) {
-					playerTurn = true;
-					compChar = 'O';
-					inputValid = true;
-				} else if (playerChar.equalsIgnoreCase("o")) {
-					playerTurn = false;
-					compChar = 'X';
-					inputValid = true;
-				} else {
-					compChar = '-'; // give comChar a default value
-					System.out.println("That is not a valid input");
-					inputValid = false;
-				}
-			} while (!inputValid);
-		}
 		do {
+			// Check if the user wants to continue a game other wise start a brand new game
+			System.out.print("Would you like to continue a past game?(Y/N)");
+			String continueGame = input.nextLine();
+			if (continueGame.equalsIgnoreCase("y")) {
+				Scanner boardLoader = new Scanner(new File("gameSaves.txt"));
+				playerChar = boardLoader.nextLine();
+				if (playerChar.equalsIgnoreCase("x"))
+					compChar = 'O';
+				else
+					compChar = 'X';
+
+				lastPlayed = boardLoader.nextLine();
+				if (playerChar.equalsIgnoreCase(lastPlayed))
+					playerTurn = true;
+				else
+					playerTurn = true;
+
+				boardSize = count(boardLoader);
+				board = new char[boardSize];
+				boardLoader.close();
+				loadGame(board);
+				printBoard(board);
+			} else {
+				// Takes user input and makes sure it is a valid board size.
+				// Size of boards is limited to 9x9
+				do {
+					System.out.print("What size board would you like to play?\nAs an example enter 9 for a 3x3 grid: ");
+					boardSize = input.nextInt();
+					input.nextLine();
+					if ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0))
+						System.out.println("That is not a perfect square. For default board enter 9.");
+				} while ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0) && Math.sqrt(boardSize) < 9);
+
+				board = new char[boardSize];
+				initializeBoard(board);
+				printBoard(board);
+
+				do {
+					System.out.print("Do you want to play X or O?\nX always goes first!: ");
+					playerChar = input.nextLine();
+					capitalize(playerChar);
+					if (playerChar.equalsIgnoreCase("x")) {
+						playerTurn = true;
+						compChar = 'O';
+						inputValid = true;
+					} else if (playerChar.equalsIgnoreCase("o")) {
+						playerTurn = false;
+						compChar = 'X';
+						inputValid = true;
+					} else {
+						compChar = '-'; // give comChar a default value
+						System.out.println("That is not a valid input");
+						inputValid = false;
+					}
+				} while (!inputValid);
+			}
 			do {
 				if (playerTurn) {
 					System.out.print("Where will you play(rowcolumn)?: ");
-					
+
 					play = input.nextInt();
 					input.nextLine();
 					while (!alreadyTaken(board, convertToIndex(play, boardSize))) {
@@ -381,7 +377,8 @@ public class TicTacToe {
 						System.out.println("Game over computer wins!");
 						break;
 					}
-					System.out.print("Would you like to stop and save your game for later, press 'X' to quit without saving?(Y/N) ");
+					System.out.print(
+							"Would you like to stop and save your game for later, press 'X' to quit without saving?(Y/N) ");
 					String reply = input.nextLine();
 					if (reply.equalsIgnoreCase("y")) {
 						if (!playerTurn)
