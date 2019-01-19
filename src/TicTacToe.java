@@ -6,11 +6,8 @@
  * CIS 36B
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.Random;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class TicTacToe {
 	/**
@@ -173,13 +170,16 @@ public class TicTacToe {
 	public static boolean inARow(char[] board, int expectedLength, char testChar) {
 		int count = 0;
 		int sqrt = (int) Math.sqrt(board.length);
-		// Tests Horiz lines
+		// Tests Horizontal lines
 		for (int i = 0; i < board.length; i += sqrt) {
 			for (int j = i; j < sqrt * ((j / sqrt) + 1); j++) {
 				if (count == expectedLength)
 					return true;
-				else if (board[j] == testChar && count != expectedLength)
+				else if (board[j] == testChar && count != expectedLength){
 					count++;
+					if (count == expectedLength)
+						return true;
+				}
 				else if (expectedLength == sqrt && board[j] != testChar) {
 					count = 0;
 					break;
@@ -187,15 +187,19 @@ public class TicTacToe {
 			}
 		}
 
-		// Test Vert. Lines
+		// Test Vertical Lines
 		for (int i = 0; i < sqrt; i++) {
 			for (int j = i; j <= ((board.length - sqrt) + i); j += sqrt) {
 				if (count == expectedLength)
 					return true;
-				else if (board[j] == testChar && count != expectedLength)
+				else if (board[j] == testChar && count != expectedLength){
 					count++;
+					if (count == expectedLength)
+						return true;
+				}
 				else if (expectedLength == sqrt && board[j] != testChar) {
 					count = 0;
+					break;
 				}
 			}
 		}
@@ -204,8 +208,11 @@ public class TicTacToe {
 		for (int i = 0; i < board.length; i += (sqrt + 1)) {
 			if (count == expectedLength)
 				return true;
-			else if (board[i] == testChar && count != expectedLength)
+			else if (board[i] == testChar && count != expectedLength){
 				count++;
+				if (count == expectedLength)
+					return true;
+			}
 			else if (expectedLength == sqrt && board[i] != testChar) {
 				count = 0;
 				break;
@@ -213,13 +220,17 @@ public class TicTacToe {
 		}
 
 		// Test diagonally down and to the left.
-		for (int i = sqrt - 1; i < board.length - sqrt; i += (sqrt - 1)) {
+		for (int i = sqrt - 1; i <= board.length - sqrt; i += (sqrt - 1)) {
 			if (count == expectedLength)
 				return true;
-			else if (board[i] == testChar && count != expectedLength)
+			else if (board[i] == testChar && count != expectedLength) {
 				count++;
+				if (count == expectedLength)
+					return true;
+			}
 			else if (expectedLength == sqrt && board[i] != testChar) {
 				count = 0;
+				break;
 			}
 		}
 		return false;
@@ -363,9 +374,9 @@ public class TicTacToe {
 					do {
 						compPlay = randomPosition(boardSize);
 					} while (!alreadyTaken(board, compPlay));
-					board[compPlay] = compChar;
+					//board[compPlay] = compChar;
 					printBoard(board);
-					numMoves++;
+					//numMoves++;
 					if (gameOverWinner(board)) {
 						System.out.println("Game over computer wins!");
 						break;
