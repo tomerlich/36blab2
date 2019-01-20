@@ -283,24 +283,24 @@ public class TicTacToe {
 		System.out.println("Welcome to Tic-Tac-Toe!");
 
 		Scanner input = new Scanner(System.in);
-		Scanner boardLoader = new Scanner(new File("gameSaves.txt"));
 		int numMoves = 0; // increments when player or game A.I. makes a move
 		int boardSize = 0, play = 0, compPlay = 0;
 		boolean donePlaying = false, playerTurn = false, inputValid = false;
-		char compChar;
 		char[] board;
-		String playerChar, lastPlayed;
+		String playerChar, lastPlayed, compChar, reply;
 
 		do {
+			
 			// Check if the user wants to continue a game other wise start a brand new game
 			System.out.print("Would you like to continue a past game?(Y/N)");
 			String continueGame = input.nextLine();
+			Scanner boardLoader = new Scanner(new File("gameSaves.txt"));
 			if (continueGame.equalsIgnoreCase("y") && boardLoader.hasNext()) {
 				playerChar = boardLoader.nextLine();
 				if (playerChar.equalsIgnoreCase("x"))
-					compChar = 'O';
+					compChar = "O";
 				else
-					compChar = 'X';
+					compChar = "X";
 
 				lastPlayed = boardLoader.nextLine();
 				if (playerChar.equalsIgnoreCase(lastPlayed))
@@ -313,6 +313,7 @@ public class TicTacToe {
 				boardLoader.close();
 				loadGame(board);
 				printBoard(board);
+				
 			} else {
 				if (!boardLoader.hasNext() && continueGame.equalsIgnoreCase("y")){
 					System.out.println("You dont have any games saved! Lets start a new one!");
@@ -325,7 +326,7 @@ public class TicTacToe {
 					input.nextLine();
 					if ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0))
 						System.out.println("That is not a perfect square. For default board enter 9.");
-				} while ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0) && Math.sqrt(boardSize) < 9);
+				} while ((Math.sqrt(boardSize) - (int) Math.sqrt(boardSize) > 0) && Math.sqrt(boardSize) > 9);
 
 				board = new char[boardSize];
 				initializeBoard(board);
@@ -337,21 +338,21 @@ public class TicTacToe {
 					capitalize(playerChar);
 					if (playerChar.equalsIgnoreCase("x")) {
 						playerTurn = true;
-						compChar = 'O';
+						compChar = "O";
 						inputValid = true;
 					} else if (playerChar.equalsIgnoreCase("o")) {
 						playerTurn = false;
-						compChar = 'X';
+						compChar = "X";
 						inputValid = true;
 					} else {
-						compChar = '-'; // give comChar a default value
+						compChar = "-"; // give comChar a default value
 						System.out.println("That is not a valid input");
 						inputValid = false;
 					}
 				} while (!inputValid);
 			}
 			do {
-				if (playerTurn) {
+				if (playerTurn && numMoves < boardSize - 1) {
 					System.out.print("Where will you play(rowcolumn)?: ");
 
 					play = input.nextInt();
@@ -369,36 +370,44 @@ public class TicTacToe {
 						break;
 					}
 					playerTurn = false;
-				} else if (!playerTurn) {
+				} else if (!playerTurn && numMoves < boardSize - 1) {
 					do {
 						compPlay = randomPosition(boardSize);
 					} while (!alreadyTaken(board, compPlay));
-					board[compPlay] = compChar;
+					board[compPlay] = compChar.charAt(0);
 					printBoard(board);
 					numMoves++;
 					if (gameOverWinner(board)) {
 						System.out.println("Game over computer wins!");
 						break;
 					}
-					System.out.print(
-							"Would you like to stop and save your game for later, press 'X' to quit without saving?(Y/N) ");
-					String reply = input.nextLine();
+					if (numMoves != boardSize - 1) {
+						System.out.print(
+								"Would you like to stop and save your game for later, press 'X' to quit without saving?(Y/N) ");
+						reply = input.nextLine();
+					}
+					else {
+						System.out.println("Game over its a tie!");
+						reply = "x";
+					}
 					if (reply.equalsIgnoreCase("y")) {
 						if (!playerTurn)
-							lastPlayed = "O";
-						else
-							lastPlayed = "X";
-						saveGame(board, playerChar, lastPlayed);
-						break;
+							lastPlayed = compChar;
+						else {
+							lastPlayed = playerChar;
+							saveGame(board, playerChar, lastPlayed);
+							break;
+						}
 					} else if (reply.equalsIgnoreCase("x")) {
 						numMoves = boardSize;
 						break;
 					}
 					playerTurn = true;
 				}
-			} while (numMoves < boardSize);
-			if(numMoves == boardSize && !gameOverWinner(board))
+			} while (numMoves < boardSize - 1);
+			if(numMoves == boardSize - 1 && !gameOverWinner(board))
 				System.out.println("Game over its a tie!");
+			
 			System.out.print("Would you like to play another game?(Y/N) ");
 			String userIn = input.nextLine();
 
