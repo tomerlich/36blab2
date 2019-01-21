@@ -1,8 +1,7 @@
-
 /**
  * Tic-Tac-Toe game
- * @author 
- * @author
+ * @author Tomer Erlich
+ * @author Henry Nguyen
  * CIS 36B
  */
 
@@ -22,7 +21,7 @@ public class TicTacToe {
 	}
 
 	/**
-	 * Capitalizes the x or o entered by a player Ignores already capitalized X and
+	 * Capitalizes the x or o entered by a player. Ignores already capitalized X and
 	 * O
 	 * 
 	 * @param character the x or o
@@ -35,7 +34,10 @@ public class TicTacToe {
 	/**
 	 * Prints the board to the console in the form of a grid, including column and
 	 * row numbers. Also prints Tic-Tac-Toe Board above the board. For example:
-	 * Tic-Tac-Toe: 1 2 3 1 O - - 2 - X - 3 - - -
+	 * Tic-Tac-Toe:   1 2 3
+     *              1 O - -
+     *              2 - X -
+     *              3 - - -
 	 * 
 	 * @param board the array representing the tic-tac-toe board
 	 */
@@ -126,7 +128,8 @@ public class TicTacToe {
 
 	/**
 	 * Determines whether three characters are all Xs or all Os Used as a helper
-	 * method to the gameOver method
+	 * method to the gameOver method.
+     * Refer to the inARow method which if used for boards from 3x3 to 9x9.
 	 * 
 	 * @param a the first character to compare, either X, O, or -
 	 * @param b the second character to compare, either X, O, or -
@@ -159,7 +162,7 @@ public class TicTacToe {
 
 	/**
 	 * Searches the board for any lines of a given character of any given length
-	 * looks for all horizontal vertical and the two possible winning diagonal lines
+	 * looks for all horizontal, vertical, and the two possible winning diagonal lines.
 	 * 
 	 * @param board          the tic-tac-toe game board
 	 * @param expectedLength the length of the line searched for
@@ -316,7 +319,7 @@ public class TicTacToe {
 				
 			} else {
 				if (!boardLoader.hasNext() && continueGame.equalsIgnoreCase("y")){
-					System.out.println("You dont have any games saved! Lets start a new one!");
+					System.out.println("You don't have any games saved! Lets start a new one!");
 				}
 				// Takes user input and makes sure it is a valid board size.
 				// Size of boards is limited to 9x9
